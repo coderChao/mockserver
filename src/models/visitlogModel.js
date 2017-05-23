@@ -26,7 +26,7 @@ const logScheme = new mongoose.Schema({
 });
 
 logScheme.pre("save",function(next){
-   if(!this.visitDt){
+   if(this.isNew){
      this.visitDt = moment().format('L');
    }   
    next();

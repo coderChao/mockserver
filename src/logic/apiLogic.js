@@ -159,13 +159,10 @@ export default class ApiLogic {
         {"apiContentMock.originIp": "","apiContentMock.mockState": true}
       ],
     };
-    return await apimockModel.find(_whereObj).sort({"apiContentMock.originIp": -1}).limit(1).then((mockData) => {
-       debugger;       
+    return await apimockModel.find(_whereObj).sort({"apiContentMock.originIp": -1}).limit(1).then((mockData) => {      
        let data = null;
        if(mockData.length > 0){
          data = mockData[0];
-         let content = mockData[0].apiContentMock[0];
-         data.mockContent = content;
        }
        return data;
     });

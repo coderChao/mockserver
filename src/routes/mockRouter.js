@@ -5,12 +5,11 @@ const router = express.Router();
 
 /*
  *处理所有的mock请求
- *回调方法：1：记录请求日志，2：处理请求，3：记录响应日志
+ *回调方法：1：填充请求日志，2：处理请求，3：记录日志
  */
 router.all("/:proCode/*",(req,res,next) =>{  
-   try{
-     res.locals.logObj = {};
-     let logData = {   
+   try{    
+     res.locals.logObj = {   
         visitHost: req.hostname,
         visitIp: req.ip,
         isMockData: true,
@@ -21,34 +20,45 @@ router.all("/:proCode/*",(req,res,next) =>{
             cookies: req.cookies,
             params: req.params,
             query: req.query,        
-        }),
-        mockResContent: ""
+        })       
      };
-     let data = VisitLogLogic.CreateLog(logData).then(data => {     
-        res.locals.logObj.id = data.id;
-        next();
-     }); 
+     next();    
    }  
-   catch(e){
-     res.locals.logObj.visitErrorMsg = e.message;
+   catch(e){     
      next(e);
    }   
 },MockController.HandleRequest,(req,res,next) => {
-   //更新日志
-   try{
-      debugger;
-      let log = res.locals.logObj;
-      log.mockResContent = {
-        headers: res._headers,
-        json: res.locals.json
-      }
-      let id = log.id;
-      delete log.id;
-      VisitLogLogic.UpdateLogById(id,log);
-      res.json(res.locals.json);
+   //添加日志
+   try{     
+     let log = res.locals.logObj;
+     log.mockResContent = {
+       headers: res._headers,
+       json: res.locals.jsonObj.data
+     }      
+     VisitLogLogic.CreateLog(log).then(data => {
+        if(res.locals.jsonObj.isResponse){
+          res.json(res.locals.jsonObj.data);
+        }        
+     });     
    }
    catch(e){
       next(e);
    }   
+});
+//捕获错误，记录错误日志，返回错误信息
+router.use(function (err, req, res, next) {
+  debugger; 
+  try{  
+    let log = res.locals.logObj;
+    log.visitErrorMsg = err.message;
+    VisitLogLogic.CreateLog(log).then(data => {
+      res.status(500);
+      res.json({error: "mock系统出错,错误信息：" + err.message + ",请联系管理员"});
+    });
+  }
+  catch(e){
+    res.status(500);
+    res.json({error: "mock系统出错,错误信息：" + e.message + ",请联系管理员"});
+  }
 });
 module.exports = router;

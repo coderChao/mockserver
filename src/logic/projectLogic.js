@@ -7,7 +7,7 @@ export default class ProjectLogic{
    *
    * @memberOf ApiLogic
    */
-  CreateApi = async(apiData) => {
+  static CreateProject = async(apiData) => {
     const _projectData = await projectModel.create(apiData);
     if (!_projectData) {
       throw "创建项目数据";
@@ -21,7 +21,7 @@ export default class ProjectLogic{
    *
    * @memberOf ApiLogic
    */
-  GetProjectListData = async(whereObj, pagesize, currentpage, sort) => {
+  static GetProjectListData = async(whereObj, pagesize, currentpage, sort) => {
     const skipnum = (currentpage - 1) * pagesize;
     return await projectModel
       .find(whereObj)
@@ -36,8 +36,15 @@ export default class ProjectLogic{
    *
    * @memberOf ApiLogic
    */
-  GetApiDataById = async(proId) => {
+  static GetProjectById = async(proId) => {
     return await projectModel.findById(proId);
+  }
+
+  /**
+   * 根据项目编码获取项目数据
+   */
+  static GetProjectByCode = async (proCode) => {
+    return await projectModel.findOne({proCode: proCode});
   }
 
   /**
@@ -46,9 +53,11 @@ export default class ProjectLogic{
    *
    * @memberOf ApiLogic
    */
-  UpdateApiData = async(proId, proData) => {
+  static UpdateProject = async(proId, proData) => {
     return await projectModel.findByIdAndUpdate({
       "_id": proId
-    }, {$set: {...proData}});
+    }, {$set: proData});
   }
+
+  
 }

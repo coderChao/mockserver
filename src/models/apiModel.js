@@ -25,8 +25,7 @@ const thisSchema = new mongoose.Schema({
   apiProxy: [
     {
       proxyState: Boolean,
-      proxyUrl: String,
-      proxyPort: String, 
+      proxyUrl: String,     
     }
   ],
   // 接口关联的用户 userCode

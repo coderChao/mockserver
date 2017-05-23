@@ -13,7 +13,7 @@ const db = mongoose.connection;
 
 db.on('error', console.error.bind(console, "连接失败"));
 db.once('open', () => {
-  console.log(`连接成功-${moment().format("YYYY-MM-DD HH:mm:ss")}`);
+  console.log(`mongodb连接成功-${moment().format("YYYY-MM-DD HH:mm:ss")}`);
 });
 
 export default mongoose;
