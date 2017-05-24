@@ -1,12 +1,13 @@
 var http = require('http');
 
-export default function Request(req,res,params){   
+export default function Request(req,res,params){ 
+  req.headers["cache-control"] = "no-cache"; //禁用缓存
   let options = {
    	hostname: params.url,
    	port: params.port,
    	method: req.method,
    	path: params.path,
-   	headers: req.headers
+   	headers: req.headers,		   
   }; 
   let bodyChunks = []; 
   return new Promise((resolve,reject) => {
@@ -18,7 +19,7 @@ export default function Request(req,res,params){
 		sres.on("data",data => {
           bodyChunks.push(data);
 		}).on("end", () => {
-		  resolve(Buffer.concat(bodyChunks));
+		  resolve(Buffer.concat(bodyChunks).toString("utf-8"));
 		}).on("error", err => {
 		  reject(err);
 		});

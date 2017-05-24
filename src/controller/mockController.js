@@ -85,15 +85,12 @@ class MockController{
     else{
       url = apiData.apiProxy[index].proxyUrl;
     }
-    debugger;
     let urlPort = url.split(':');
-    let content = await request(req,res,{
+    return await request(req,res,{
       url: urlPort[0],
       port: urlPort[1],
       path: res.locals.path
-    }); 
-    debugger;
-    return content;  
+    });     
   }
 }
 
