@@ -84,4 +84,18 @@ export default class UserLogic {
         throw _errStr;
       })
   }
+  
+  /*
+   * 根据用户名获取用户详情
+   */
+  static GetUserByUserName = async(name) => {
+    return await userModel.findOne({userCode: name});
+  }
+  
+  /**
+   * 比对密码是否一致
+   */
+  static ComparePassword = async(originPwd,salt,encryptPwd) => {
+    return await userModel.ComparePassword(originPwd,salt,encryptPwd);
+  }
 }

@@ -3,8 +3,9 @@
  */
 import mongoose from '../db/index';
 import moment from 'moment';
+import crypt from '../utils/crypto';
 
-const thisSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
       // 用户名
       userCode: {
         type: String
@@ -23,15 +24,34 @@ const thisSchema = new mongoose.Schema({
       },
       // 注册日期
       regDate: {
-        type: Number
+        type: String
       },
       // 最后登录时间
       lastDate: {
-        type: Number
-      }
+        type: String
+      },
+      //盐值
+      salt: String
     });
 
-export default mongoose.model("User", thisSchema);
+UserSchema.pre("save",function(next){
+   if(this.isNew){
+     this.regDate = moment().format("L");
+   }
+   const cryptData = crypt.regEncrypt(this.userPwd);
+   this.salt = cryptData.salt;
+   this.userPwd = cryptData.encryptPwd;
+   next();
+});
+
+UserSchema.static = {
+  ComparePassword: function(originPwd,salt,pwd){
+    const encryptPwd = crypt.loginEncrpt(originPwd,salt);
+    return encryptPwd === pwd;
+  }
+}
+
+export default mongoose.model("User", UserSchema);
 
 // export default class UserModel {
 //   constructor() {

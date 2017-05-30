@@ -7,9 +7,34 @@ let router = express.Router();
 /**
  * 记录请求日志
  */
-// router.all("*",(req,res,next) => {
-//    next();
-// })
+router.all("*",(req,res,next) => {
+   try{
+     res.locals.logObj = {};
+     let logData = {   
+        visitHost: req.hostname,
+        visitIp: req.ip,
+        isMockData: true,
+        visitAddr: req.path.replace("/" + req.params.proCode,""),
+        visitReqContent: JSON.stringify({
+            headers: req.headers,
+            body: req.body,
+            cookies: req.cookies,
+            params: req.params,
+            query: req.query,        
+        }),
+        mockResContent: ""
+     };
+     let data = VisitLogLogic.CreateLog(logData).then(data => {     
+        res.locals.logObj.id = data.id;
+        next();
+     }); 
+   }  
+   catch(e){
+     res.locals.logObj.visitErrorMsg = e.message;
+     next(e);
+   }   
+   next();
+})
 
 /**
  * Api基本信息接口
