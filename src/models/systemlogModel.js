@@ -2,6 +2,7 @@
  * 系统访问记录
  */
 import mongoose from '../db/index';
+import moment from 'moment';
 
 const thisSchema = new mongoose.Schema({ 
   //访问日期
@@ -23,6 +24,13 @@ const thisSchema = new mongoose.Schema({
   sysResContent: String,
   //出错时的错误信息
   sysErrorMsg: String,
+});
+
+thisSchema.pre("save",function(next){
+   if(this.isNew){
+     this.sysDt = moment().format('L');
+   }   
+   next();
 });
 
 export default mongoose.model("SystemLog", thisSchema);

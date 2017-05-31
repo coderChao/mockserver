@@ -1,4 +1,4 @@
-const CreateReData = (code,message,redata) => {
+const CreateReData = (code,redata,message) => {
   return {
     "Code": code,
     "Message":message,

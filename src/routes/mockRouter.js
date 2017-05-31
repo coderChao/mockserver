@@ -38,6 +38,7 @@ router.all("/:proCode/*",(req,res,next) =>{
      VisitLogLogic.CreateLog(log).then(data => {
         if(res.locals.jsonObj.isResponse){
           res.json(res.locals.jsonObj.data);
+          res.locals.jsonObj = null;
         }        
      });     
    }
@@ -52,6 +53,7 @@ router.use(function (err, req, res, next) {
     let log = res.locals.logObj;
     log.visitErrorMsg = err.message;
     VisitLogLogic.CreateLog(log).then(data => {
+      res.locals.logObj = null;
       res.status(500);
       res.json({error: "mock系统出错,错误信息：" + err.message + ",请联系管理员"});
     });

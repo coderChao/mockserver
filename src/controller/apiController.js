@@ -1,5 +1,6 @@
 import ApiLogic from '../logic/apiLogic';
-import CreateReData from '../models/returnData';
+import CreateReData from '../utils/returnData';
+import redis from 'redis';
 
 class ApiController {
   constructor() {
@@ -13,14 +14,54 @@ class ApiController {
    * @memberOf ApiController
    */
   CreateApiData = async(req, res, next) => {
-    // 验证数据
-    const _reData = await this
-      .ApiLogic
-      .CreateApi(req.body)
-      .catch((e) => {
-        res.json(CreateReData(e, null));
-      });
-    res.json(CreateReData(null, _reData));
+    try{
+      const _reData = await this.ApiLogic.CreateApi(req.body);
+      //存入redis中
+      redis.setAsync(_reData.id,JSON.stringify(_reData));
+      res.locals.json = CreateReData(0, _reData);
+      next();
+    }
+    catch(e){
+      next(e);
+    }
+  }
+
+  /**
+   * 根据接口名称或接口地址查找接口列表
+   *
+   *
+   * @memberOf ApiController
+   */
+  GetApiListDataByNameOrUrl = async(req, res, next) => {
+    try{
+      // 获取查询相关参数
+      const {searchValue, pagesize, currentpage, sort} = req.query;
+      const _reData = await this.ApiLogic.GetApiListDataByNameOrUrl(searchValue, pagesize, currentpage, sort);        
+      res.json(CreateReData(0, _reData));
+    }
+    catch(e){
+      next(e);
+    }
+  }
+
+  /**
+   * 根据api编号查找接口详情
+   * 
+   * 
+   * @memberOf ApiController
+   */
+  GetApiDataById = async(req, res, next) => {
+    try{
+      let _reData = await redis.getAsync(req.params.apiId);
+      if(!_reData){
+        _reData = await this.ApiLogic.GetApiDataById(req.params.apiId);
+      }
+      res.locals.json = CreateReData(0, _reData)
+      next();
+    }
+    catch(e){
+      next(e);
+    }
   }
 
   /**
@@ -35,75 +76,9 @@ class ApiController {
       .ApiLogic
       .CreateApiMock(req.body.apiId, req.body.submitData)
       .catch((e) => {
-        res.json(CreateReData(e, null));
+        res.json((e, null));
       });
-    res.json(CreateReData(null, _reData));
-  }
-
-  /**
-   * 创建接口说明数据
-   *
-   *
-   * @memberOf ApiController
-   */
-  CreatePcDesc = async(req, res, next) => {
-    const _reData = await this
-      .ApiLogic
-      .CreatePcDesc(req.body)
-      .catch((e) => {
-        res.json(CreateReData(e, null));
-      });
-    res.json(CreateReData(null, _reData));
-  }
-
-  /**
-   * 创建接口修改记录
-   *
-   *
-   * @memberOf ApiController
-   */
-  CreateModData = async(req, res, next) => {
-    const _reData = await this
-      .ApiLogic
-      .CreateModData(req.body)
-      .catch((e) => {
-        res.json(CreateReData(e, null));
-      });
-    res.json(CreateReData(null, _reData));
-  }
-
-  /**
-   * 根据接口名称和接口地址查找接口列表
-   *
-   *
-   * @memberOf ApiController
-   */
-  GetApiListDataByNameOrUrl = async(req, res, next) => {
-    // 获取查询相关参数
-    const {searchValue, pagesize, currentpage, sort} = req.body;
-    const _reData = await this
-      .ApiLogic
-      .GetApiListDataByNameOrUrl(searchValue, pagesize, currentpage, sort)
-      .catch((e) => {
-        res.json(CreateReData(e, null));
-      });
-    res.json(CreateReData(null, _reData));
-  }
-
-  /**
-   * 根据api编号查找接口详情
-   * 
-   * 
-   * @memberOf ApiController
-   */
-  GetApiDataById = async(req, res, next) => {
-    const _reData = await this
-      .ApiLogic
-      .GetApiDataById(req.body.apiId)
-      .catch((e) => {
-        res.json(CreateReData(e, null));
-      });
-    res.json(CreateReData(null, _reData));
+    res.json((null, _reData));
   }
 
   /**
@@ -129,9 +104,28 @@ class ApiController {
    * @memberOf ApiController
    */
   UpdateApiDataById = async(req,res,next) => {
+    try{
+      const _reData = await this.ApiLogic.UpdateApiDataById(req.body.apiId,req.body.submitData);
+      //修改redis中的缓存数据
+      redis.setAsync(_reData.id,JSON.stringify(_reData));
+      res.locals.json = CreateReData(0, _reData);
+      next();
+    }
+    catch(e){
+      next(e);
+    }
+  }
+
+   /**
+   * 创建接口说明数据
+   *
+   *
+   * @memberOf ApiController
+   */
+  CreatePcDesc = async(req, res, next) => {
     const _reData = await this
-    .ApiLogic
-      .UpdateApiDataById(req.body.apiId,req.body.submitData)
+      .ApiLogic
+      .CreatePcDesc(req.body)
       .catch((e) => {
         res.json(CreateReData(e, null));
       });

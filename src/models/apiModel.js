@@ -9,7 +9,7 @@ const thisSchema = new mongoose.Schema({
   proCode: String,
   // 接口名称
   apiName: String,
-  // 接口状态 0：未生效 1：已确认 2：待确认 
+  // 接口状态 0：未生效 1：已确认 2：待确认 3: 已删除
   apiState:Number,
   // 接口method类型
   apiMethod: String,
