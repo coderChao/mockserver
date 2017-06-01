@@ -57,10 +57,8 @@ router.put('/api', ApiController.UpdateApiDataById);
 router.get('/api/:apiId', ApiController.GetApiDataById);
 //根据条件查询接口列表数据，支持翻页
 router.get('/api', ApiController.GetApiListDataByNameOrUrl);
-
-router.get("*",(req,res,next) => {
-   debugger;
-})
+//根据Id将Api数据置为无效
+// router.delete('/api', ApiController.DeleteApiDataById);
 
 
 module.exports = router;

@@ -16,12 +16,12 @@ moment.updateLocale('zh-CN',{
   } 
 }); //设置moment本地化
 
-// var index = require('./routes/index');
-// var users = require('./routes/users');
 //mock系统自身业务路由
 var business = require('./dist/routes/businessRouter');
 //需要mock数据的路由
 var mockRouter = require('./dist/routes/mockRouter');
+
+global.RedisWrongData = [];
 
 var app = express();
 

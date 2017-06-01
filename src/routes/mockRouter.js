@@ -31,16 +31,18 @@ router.all("/:proCode/*",(req,res,next) =>{
    //添加日志
    try{     
      let log = res.locals.logObj;
-     log.mockResContent = {
+     debugger;
+     log.visitResContent = JSON.stringify({
        headers: res._headers,
-       json: res.locals.jsonObj.data
-     }      
+       body: res.locals.jsonObj.data
+     });
+     log.visitResCode = res.statusCode;    
      VisitLogLogic.CreateLog(log).then(data => {
         if(res.locals.jsonObj.isResponse){
           res.json(res.locals.jsonObj.data);
           res.locals.jsonObj = null;
         }        
-     });     
+     });    
    }
    catch(e){
       next(e);
@@ -53,13 +55,14 @@ router.use(function (err, req, res, next) {
     let log = res.locals.logObj;
     log.visitErrorMsg = err.message;
     VisitLogLogic.CreateLog(log).then(data => {
+      res.status(999);
       res.locals.logObj = null;
-      res.status(500);
       res.json({error: "mock系统出错,错误信息：" + err.message + ",请联系管理员"});
     });
   }
   catch(e){
-    res.status(500);
+    res.status(999);
+    res.locals.logObj = null;
     res.json({error: "mock系统出错,错误信息：" + e.message + ",请联系管理员"});
   }
 });

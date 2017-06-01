@@ -19,8 +19,10 @@ const logScheme = new mongoose.Schema({
    visitMethod: String,
    //请求内容
    visitReqContent: String,
+    //响应状态码
+   visitResCode: Number,
    //响应内容
-   visitResContent: String,
+   visitResContent: String,  
    //出错时的错误信息
    visitErrorMsg: String
 });

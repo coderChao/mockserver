@@ -15,12 +15,13 @@ export default function Request(req,res,params){
 	var sreq = http.request(options,function(sres){
 		debugger;
 		res.writeHead(sres.statusCode, sres.headers);
-        sres.pipe(res);
+      sres.pipe(res);
 		sres.on("data",data => {
-          bodyChunks.push(data);
+      bodyChunks.push(data);
 		}).on("end", () => {
 		  resolve(Buffer.concat(bodyChunks).toString("utf-8"));
 		}).on("error", err => {
+			debugger;
 		  reject(err);
 		});
 	});
@@ -30,7 +31,8 @@ export default function Request(req,res,params){
       sreq.end();
     }
 	sreq.on("error", err => {
-	  reject(err);
+		debugger;
+		reject(err);
 	});	
   });  
 }

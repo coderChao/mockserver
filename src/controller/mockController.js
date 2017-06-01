@@ -65,26 +65,30 @@ class MockController{
    * 请求代理
    */
   _requestProxy = async (apiData,req,res) => {
-    let index = apiData.apiProxy.findIndex(item => item.proxyState === true); 
-    debugger;
     let url = "";
-    if(index === -1){
-      //从redis中获取项目配置的全局地址
-      url = await redis.getAsync(apiData.proCode);
+    if(apiData && Array.isArray(apiData.apiProxy) && apiData.apiProxy.length > 0){
+       let index = apiData.apiProxy.findIndex(item => item.proxyState === true);
+       if(index !== -1){
+         url = apiData.apiProxy[index].proxyUrl;
+       } 
+    }
+    if(url === ""){
+       //从redis中获取项目配置的全局地址
+      url = await redis.getAsync(req.params.proCode);
       if(!url){
         //从项目中获取配置的全局地址
-        let project = await ProjectLogic.GetProjectByCode(apiData.proCode);
+        let project = await ProjectLogic.GetProjectByCode(req.params.proCode);
         if(!project){
           throw '项目不存在';
         }
         url = project.proProxy;
-        redis.setAsync(apiData.proCode,project.proProxy);
+        redis.setAsync(req.params.proCode,project.proProxy);
       }     
     }
-    else{
-      url = apiData.apiProxy[index].proxyUrl;
-    }
     let urlPort = url.split(':');
+    if(urlPort.length !== 2){
+      throw "接口地址未配置或配置不正确，正确配置例：127.0.0.1:3000 或 域名:3000"
+    }
     return await request(req,res,{
       url: urlPort[0],
       port: urlPort[1],

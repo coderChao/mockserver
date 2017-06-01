@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "build": "babel src -d dist --source-maps",
-    "start": "npm run build && node ./bin/www"
+    "start": "npm run build && node ./bin/www",
+    "startDev": "npm run build && devtool ./bin/www"
   },
   "dependencies": {
     "babel-plugin-import": "1.1.0",
@@ -22,6 +23,7 @@
     "moment": "2.17.1",
     "mongoose": "^4.9.5",
     "morgan": "~1.8.1",
+    "nodemailer": "^4.0.1",
     "path-to-regexp": "1.7.0",
     "qs": "6.3.0",
     "redis": "^2.7.1",
