@@ -39,3 +39,5 @@ process.on('message', function(mailOptions){
         process.send({message: info});
     });
 });
+
+//todo: 子进程退出事件处理
