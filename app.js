@@ -15,13 +15,15 @@ moment.updateLocale('zh-CN',{
     'L': 'YYYY-MM-DD HH:mm:ss'
   } 
 }); //设置moment本地化
+global.logger  = require('./src/utils/log'); //设置全局log方法
 
 //mock系统自身业务路由
 var business = require('./dist/routes/businessRouter');
 //需要mock数据的路由
 var mockRouter = require('./dist/routes/mockRouter');
 
-global.RedisWrongData = [];
+//redis出错时，有可能导致数据不同步的key,值唯一
+global.RedisWrongData = new Set();
 
 var app = express();
 
@@ -41,18 +43,18 @@ function assignId(req, res, next) {
   next()
 }
 // 日志目录
-var logDirectory = __dirname + '/log'
+var logDirectory = __dirname + '/log/access'
 // 判断是否存在目录，如果不存在则创建
-fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
+fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
 var accessLogStream = FileStreamRotator.getStream({
   date_format: 'YYYYMMDD',
   filename: logDirectory + '/access-%DATE%.log',
   frequency: 'daily',
   verbose: true
-})
+});
 logger.token('id', function getId(req) {
   return req.id
-})
+});
 // 创建日志
 app.use(logger(':id :method :url :status :response-time :remote-addr :user-agent ', {stream: accessLogStream}))
 
