@@ -7,6 +7,7 @@ import request from '../utils/request';
 class MockController{
   constructor(){
      this.ApiLogic = new ApiLogic();
+     var a = 20;
   }
   HandleRequest = async (req,res,next) => {
     debugger;
