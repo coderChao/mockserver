@@ -37,6 +37,7 @@ class UserController{
    */
   Register = async (req,res,next) => {
     try{
+      var c = 666888;
       let user = await UserLogic.CreateUser(req.body);
       res.locals.json = CreateReData(0,{userCode: user.userCode});
       next();
