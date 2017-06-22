@@ -5,7 +5,6 @@ import redis from 'redis';
 class ApiController {
   constructor() {
     this.ApiLogic = new ApiLogic();
-    var a = 6666688888;
   }
 
   /**
