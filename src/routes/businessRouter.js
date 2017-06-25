@@ -8,7 +8,7 @@ const router = express.Router();
 const ignoreAuthPath = ["/login","/register"];
 
 //验证用户信息,记录请求日志
-router.use(function(req,res,next){
+router.use(async function(req,res,next){
   try{
     res.locals.logObj = {
       sysAddr: req.path,
@@ -22,17 +22,16 @@ router.use(function(req,res,next){
     };
     if(ignoreAuthPath.findIndex(item => item === req.path) === -1){
         let code = req.header("MS");
-        redis.get(code, data => {
-            if(data){
-              let userInfo = JSON.parse(data);
-              res.locals.UserInfo = userInfo;
-              //拼接请求日志
-              res.locals.logObj.sysUserId = userInfo.id;
-              res.locals.logObj.sysUserName = userInfo.userName;             
-              return next();
-            }
-            res.json(CreateReData(-2,null,"用户未登录"));
-        });
+        let data = redis.safeGetStrAsync(code);
+        if(data){
+            let userInfo = JSON.parse(data);
+            res.locals.UserInfo = userInfo;
+            //拼接请求日志
+            res.locals.logObj.sysUserId = userInfo.id;
+            res.locals.logObj.sysUserName = userInfo.userName;             
+            return next();
+        }
+        res.json(CreateReData(-2,null,"用户未登录"));
         return;
     }
     next();

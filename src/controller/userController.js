@@ -22,7 +22,7 @@ class UserController{
       }
       //更改最后一次登陆时间，并将用户信息以id为键存入redis
       let newInfo = UserLogic.UpdateUserById(info.id,{lastDate: moment().format("L")});
-      redis.setAsync(newInfo.id, JSON.stringify(newInfo));
+      redis.safeSetStrAsync(newInfo.id, JSON.stringify(newInfo));
       res.locals.logObj.sysUserId = newInfo.id;
       res.locals.logObj.sysUserName = newInfo.userName;  
       res.locals.json = CreateReData(0,newInfo.id);

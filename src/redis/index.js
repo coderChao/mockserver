@@ -21,16 +21,15 @@ const client = redis.createClient(config.port,config.host,{
             subject: 'Redis错误预警',
             html: `<h3>redis连接出错，请尽快处理</h3><br/><p>错误信息: ${options.error.message}</p>`
           });   
-          return undefined;  
+          return 2000;  //如果重试五次后仍连接不上，发送报警邮件，并在之后每隔两秒重试一次  
         }
-        // 3秒后重新连接
-        return 3000;
+        // 1秒后重新连接
+        return 1000;
     }
 });
 client.auth(config.password);
 
 client.on("connect",() => {
-  debugger;
   logger.info(`redis连接成功`);
 });
 // client.on("reconnecting", (data1,data2) => {
@@ -39,7 +38,6 @@ client.on("connect",() => {
 //   console.log(data2);
 // });
 client.on("ready",(data) => {
-   debugger;
   if(global.RedisWrongData.size > 0){
     client.del(Array.from(RedisWrongData),function(err,res){
       if(err){
@@ -52,27 +50,45 @@ client.on("ready",(data) => {
   }
 });
 client.on("end",(data) => {
-   debugger;
-  console.log(data);
+  logger.info("redis end",data);
 });
 
 //https://github.com/NodeRedis/node_redis
 //https://www.ibm.com/developerworks/cn/opensource/os-cn-nodejs-redis/
 client.on("error",(err) => {
-  debugger;
   logger.error(`redis连接失败-错误信息: ${err}`);
 });
 
-client.safeGetAsync = async function(key){
+client.safeGetStrAsync = async function(key){
   try{
-    return await client.getAsync(key);
+    if(client.connected){
+      return await client.getAsync(key);
+    }
+    return null;
   }
-  catch(e){    
-    console.log(e.message);
+  catch(e){
+    logger.error(`redis get 失败, key: ${key}错误信息: e.message`);
     return null;
   }
 }
 
-// client.safeSetSync = function(key,value)
+/**
+ * 安全set，expires单位为秒 默认为一天 24 * 60 * 60 ＝ 86400
+ */
+client.safeSetStrAsync = async function(key,value,expires = 86400) {
+  debugger;
+  try{
+    if(client.connected){
+      return await client.setAsync(key,value, 'EX', expires);
+    }
+    global.RedisWrongData.add(key);
+    return null;
+  }
+  catch(e){
+    global.RedisWrongData.add(key);
+    logger.error(`redis set 失败 key: ${key}, value: ${value}, expires: ${expires},错误信息: ${e.message}`);
+    return null;
+  }
+}
 
 export default client;

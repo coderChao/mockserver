@@ -17,7 +17,7 @@ class ApiController {
     try{
       const _reData = await this.ApiLogic.CreateApi(req.body);
       //存入redis中
-      redis.setAsync(_reData.id,JSON.stringify(_reData));
+      redis.safeSetStrAsync(_reData.id,JSON.stringify(_reData));
       res.locals.json = CreateReData(0, _reData);
       next();
     }
@@ -52,7 +52,7 @@ class ApiController {
    */
   GetApiDataById = async(req, res, next) => {
     try{
-      let _reData = await redis.getAsync(req.params.apiId);
+      let _reData = await redis.safeGetStrAsync(req.params.apiId);
       if(!_reData){
         _reData = await this.ApiLogic.GetApiDataById(req.params.apiId);
       }
@@ -107,7 +107,7 @@ class ApiController {
     try{
       const _reData = await this.ApiLogic.UpdateApiDataById(req.body.apiId,req.body.submitData);
       //修改redis中的缓存数据
-      redis.setAsync(_reData.id,JSON.stringify(_reData));
+      redis.safeSetStrAsync(_reData.id,JSON.stringify(_reData));
       res.locals.json = CreateReData(0, _reData);
       next();
     }

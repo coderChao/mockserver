@@ -14,11 +14,11 @@ class MockController{
        let path = req.path.replace("/" + req.params.proCode,"");
        res.locals.path = path;
        //从redis中查找是否存在该条记录 
-       let apiData = await redis.getAsync(`${path}-${req.method}`);
+       let apiData = await redis.safeGetStrAsync(`${path}-${req.method}`);
        if(!apiData){
           //根据请求地址和项目编码和Method查询api详情          
           apiData = await this.ApiLogic.GetApiDataByUrl(path, req.params.proCode, req.method);     
-          if(apiData) redis.setAsync(`${path}-${req.method}`,JSON.stringify(apiData));          
+          if(apiData) redis.safeSetStrAsync(`${path}-${req.method}`,JSON.stringify(apiData));          
        }
        else{
          apiData = JSON.parse(apiData);
@@ -26,11 +26,11 @@ class MockController{
        }
        if(apiData && apiData.apiProxyState){  //接口存在并且接口代理状态已开启
           //从redis查找接口mock规则
-          let mockData = await redis.getAsync(apiData.id);
+          let mockData = await redis.safeGetStrAsync(apiData.id);
           if(!mockData){
             //获取接口详情
             mockData = await this.ApiLogic.GetApiMockListDataByapiId(req.ip,apiData.id);
-            if(mockData) redis.setAsync(apiData.id,JSON.stringify(mockData)); 
+            if(mockData) redis.safeSetStrAsync(apiData.id,JSON.stringify(mockData)); 
           }    
           else{
             mockData = JSON.parse(mockData);
@@ -74,7 +74,7 @@ class MockController{
     }
     if(url === ""){
        //从redis中获取项目配置的全局地址
-      url = await redis.getAsync(req.params.proCode);
+      url = await redis.safeGetStrAsync(req.params.proCode);
       if(!url){
         //从项目中获取配置的全局地址
         let project = await ProjectLogic.GetProjectByCode(req.params.proCode);
@@ -82,7 +82,7 @@ class MockController{
           throw '项目不存在';
         }
         url = project.proProxy;
-        redis.setAsync(req.params.proCode,project.proProxy);
+        redis.safeSetStrAsync(req.params.proCode,project.proProxy);
       }     
     }
     let urlPort = url.split(':');

@@ -3,20 +3,17 @@ const fs = require("fs");
 const path = require("path");
 const logDirectory = path.join(__dirname, '../../log/app');
 // 判断是否存在目录，如果不存在则创建
-fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
+// if(!fs.existsSync(logDirectory)){
+//   fs.mkdirSync(logDirectory);
+// }
 log4js.configure({
     appenders: [
-        // {
-        //     type: 'console',
-        //     category: "console"
-
-        // }, //控制台输出
         {
-            type: "dateFile",
-            filename: logDirectory + '/info',
-            pattern: "-yyyyMMdd.log",
-            // absolute: false,
-            alwaysIncludePattern: true,
+            type: "file",
+            filename: path.join(logDirectory, "./info.log"),
+            // pattern: "yyyyMMdd.log",
+            absolute: true,
+            // alwaysIncludePattern: true,
             // maxLogSize: 20480,
             // backups: 3,
             category: 'logInfo'

@@ -8,10 +8,10 @@ process.title = "mockserver main process";
 var child = childProcess.fork(execPath);
 child.on('message', function(result){
     if(result.error){
-      logger.error(JSON.stringify(result.error));
+      logger.error("邮件发送失败,错误信息: ",JSON.stringify(result.error));
       return;
     }
-    logger.info(JSON.stringify(result.message));
+    logger.info("邮件发送成功，信息: ",JSON.stringify(result.message));
 });
 
 /**

@@ -11,10 +11,16 @@ mongoose.connect(_mongodbUrl);
 
 const db = mongoose.connection;
 
-db.on('error', console.error.bind(console, "连接失败"));
-db.once('open', () => {
-  console.log(`mongodb连接成功-${moment().format("YYYY-MM-DD HH:mm:ss")}`);
+//logger.error(`mongodb连接失败, 错误信息: ${error.message}`)
+db.on('error', (error) => {
+  console.log(`mongodb连接失败, 错误信息: ${error.message}`)
 });
+db.once('open', () => {
+  logger.info(`mongodb连接成功-${moment().format("YYYY-MM-DD HH:mm:ss")}`);
+});
+db.on("disconnected", (data) => {c
+  onsole.log(`mongodb=>disconnected, 信息: ${data}")`)
+})
 
 export default mongoose;
 
