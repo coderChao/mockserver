@@ -2,6 +2,8 @@ var http = require('http');
 
 module.exports = function Request(req,res,params){ 
   req.headers["cache-control"] = "no-cache"; //禁用缓存
+	req.headers.host = "http://" + params.url + ":" + params.port;
+	req.headers.origin = "http://" + params.url + ":" + params.port;
   let options = {
    	hostname: params.url,
    	port: params.port,
@@ -19,14 +21,16 @@ module.exports = function Request(req,res,params){
 		sres.on("data",data => {
       bodyChunks.push(data);
 		}).on("end", () => {
-		  resolve(Buffer.concat(bodyChunks).toString("utf-8"));
+			let content = Buffer.concat(bodyChunks).toString("utf-8");
+		  resolve(content);
 		}).on("error", err => {
 			debugger;
 		  reject(err);
 		});
 	});
 	if (/POST|PUT/i.test(req.method)) {
-      req.pipe(sreq);
+      // req.pipe(sreq);
+			sreq.end();
     } else {
       sreq.end();
     }
