@@ -1,6 +1,6 @@
 var http = require('http');
 
-export default function Request(req,res,params){ 
+module.exports = function Request(req,res,params){ 
   req.headers["cache-control"] = "no-cache"; //禁用缓存
   let options = {
    	hostname: params.url,

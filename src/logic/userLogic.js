@@ -1,6 +1,6 @@
-import userModel from '../models/userModel';
+const userModel = require('../models/userModel');
 
-export default class UserLogic {
+module.exports = class UserLogic {
   /* 新建用户
    *
    *

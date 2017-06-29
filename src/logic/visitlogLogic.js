@@ -1,6 +1,6 @@
-import visitLogModel from '../models/visitlogModel';
+const visitLogModel = require('../models/visitlogModel');
 
-export default class VisitLogLogic{
+module.exports = class VisitLogLogic{
   /**
    * 创建请求日志
    */

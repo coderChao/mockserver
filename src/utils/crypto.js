@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+const crypto = require('crypto');
 
 /*
  * 10位盐
@@ -69,6 +69,6 @@ const regEncrypt = (password) => {
 
 // test2();
 
-export default {
+module.exports = {
    loginEncrpt, regEncrypt
 }

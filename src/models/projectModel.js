@@ -1,8 +1,8 @@
 /**
  * 项目配置
  */
-import mongoose from '../db/index';
-import moment from 'moment';
+const mongoose = require('../db/index');
+const moment = require('moment');
 
 const thisSchema = new mongoose.Schema({
       // 项目代码
@@ -19,7 +19,7 @@ const thisSchema = new mongoose.Schema({
       }
     });
 
-export default mongoose.model("Project", thisSchema);
+module.exports = mongoose.model("Project", thisSchema);
 
 
 

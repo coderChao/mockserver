@@ -1,8 +1,8 @@
 /**
  * 接口模型
  */
-import mongoose from '../db/index';
-import moment from 'moment';
+const mongoose = require('../db/index');
+const moment = require('moment');
 
 const thisSchema = new mongoose.Schema({
   // 项目代码
@@ -36,7 +36,7 @@ const thisSchema = new mongoose.Schema({
 
 const _thisModel = mongoose.model("ApiInformation", thisSchema);
 
-export default _thisModel;
+module.exports = _thisModel;
 
 // export default class ApiModel {
 //   constructor() {

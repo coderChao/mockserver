@@ -1,6 +1,6 @@
-import projectModel from '../models/projectModel';
+const projectModel = require('../models/projectModel');
 
-export default class ProjectLogic{ 
+module.exports = class ProjectLogic{ 
   /**
    * 创建项目数据
    * @param {object} apiData 接口数据

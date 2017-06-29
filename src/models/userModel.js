@@ -1,9 +1,9 @@
 /**
  * 用户数据
  */
-import mongoose from '../db/index';
-import moment from 'moment';
-import crypt from '../utils/crypto';
+const mongoose = require('../db/index');
+const moment = require('moment');
+const crypt = require('../utils/crypto');
 
 const UserSchema = new mongoose.Schema({
       // 用户名
@@ -51,7 +51,7 @@ UserSchema.static = {
   }
 }
 
-export default mongoose.model("User", UserSchema);
+module.exports = mongoose.model("User", UserSchema);
 
 // export default class UserModel {
 //   constructor() {

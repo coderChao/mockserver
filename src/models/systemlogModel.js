@@ -1,8 +1,8 @@
 /**
  * 系统访问记录
  */
-import mongoose from '../db/index';
-import moment from 'moment';
+const mongoose = require('../db/index');
+const moment = require('moment');
 
 const thisSchema = new mongoose.Schema({ 
   //访问日期
@@ -33,4 +33,4 @@ thisSchema.pre("save",function(next){
    next();
 });
 
-export default mongoose.model("SystemLog", thisSchema);
+module.exports = mongoose.model("SystemLog", thisSchema);

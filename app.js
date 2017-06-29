@@ -15,7 +15,7 @@ moment.updateLocale('zh-CN',{
     'L': 'YYYY-MM-DD HH:mm:ss'
   } 
 }); //设置moment本地化
-global.logger  = require('./src/utils/log'); //设置全局log方法
+global.logger  = require('./dist/utils/log'); //设置全局log方法
 
 //mock系统自身业务路由
 var business = require('./dist/routes/businessRouter');

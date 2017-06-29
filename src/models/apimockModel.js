@@ -1,8 +1,8 @@
 /**
  * 接口模型
  */
-import mongoose from '../db/index';
-import moment from 'moment';
+const mongoose = require('../db/index');
+const moment = require('moment');
 
 const thisSchema = new mongoose.Schema({
   _id:false,
@@ -20,4 +20,4 @@ const thisSchema = new mongoose.Schema({
     ]
 });
 
-export default mongoose.model("ApiMockData", thisSchema);
+module.exports = mongoose.model("ApiMockData", thisSchema);

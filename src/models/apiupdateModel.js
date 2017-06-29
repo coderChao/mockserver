@@ -1,8 +1,8 @@
 /**
  * 系统修改记录
  */
-import mongoose from '../db/index';
-import moment from 'moment';
+const mongoose = require('../db/index');
+const moment = require('moment');
 
 const thisSchema = new mongoose.Schema({
   // 接口ID
@@ -15,4 +15,4 @@ const thisSchema = new mongoose.Schema({
   apiUpdateContent:String
 });
 
-export default mongoose.model("ApiUpdateData", thisSchema);
+module.exports = mongoose.model("ApiUpdateData", thisSchema);

@@ -1,8 +1,8 @@
 /**
  * Mock访问记录
  */
-import mongoose from '../db/index';
-import moment from 'moment';
+const mongoose = require('../db/index');
+const moment = require('moment');
 
 const logScheme = new mongoose.Schema({
    //访问时间
@@ -34,4 +34,4 @@ logScheme.pre("save",function(next){
    next();
 });
 
-export default mongoose.model("MockVisitLog", logScheme);
+module.exports = mongoose.model("MockVisitLog", logScheme);

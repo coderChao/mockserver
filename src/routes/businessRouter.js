@@ -1,9 +1,9 @@
-import express from 'express';
-import redis from '../redis';
-import CreateReData from '../utils/returndata';
+const express = require('express');
+const redis = require('../redis');
+const CreateReData = require('../utils/returndata');
 
-import ApiController from '../controller/apiController';
-import UserController from '../controller/userController';
+const ApiController = require('../controller/apiController');
+const UserController = require( '../controller/userController');
 const router = express.Router();
 const ignoreAuthPath = ["/login","/register"];
 

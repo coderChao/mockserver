@@ -1,7 +1,7 @@
-import UserLogic from '../logic/projectLogic';
-import CreateReData from '../utils/returndata';
-import moment from 'moment';
-import redis from 'redis';
+const UserLogic = require('../logic/projectLogic');
+const CreateReData = require('../utils/returndata');
+const moment = require('moment');
+const redis = require('redis');
 
 class UserController{
   /**
@@ -48,4 +48,4 @@ class UserController{
   }
 }
 
-export default new UserController()
+module.exports = new UserController()

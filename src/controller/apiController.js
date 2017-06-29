@@ -1,6 +1,6 @@
-import ApiLogic from '../logic/apiLogic';
-import CreateReData from '../utils/returnData';
-import redis from 'redis';
+const ApiLogic = require('../logic/apiLogic');
+const CreateReData = require('../utils/returnData');
+const redis = require('redis');
 
 class ApiController {
   constructor() {

@@ -1,10 +1,10 @@
-import _ from "lodash";
-import apiModel from '../models/apiModel';
-import apimockModel from '../models/apimockModel';
-import apipcdescModel from '../models/apipcdescModel';
-import apiupdateModel from '../models/apiupdateModel';
+const _ = require("lodash");
+const apiModel = require('../models/apiModel');
+const apimockModel = require('../models/apimockModel');
+const apipcdescModel = require('../models/apipcdescModel');
+const apiupdateModel = require('../models/apiupdateModel');
 
-export default class ApiLogic {
+module.exports = class ApiLogic {
 
   /**
    * 创建接口基础数据

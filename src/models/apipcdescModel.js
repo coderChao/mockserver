@@ -1,8 +1,8 @@
 /**
  * 接口模型
  */
-import mongoose from '../db/index';
-import moment from 'moment';
+const mongoose = require('../db/index');
+const moment = require('moment');
 
 const thisSchema = new mongoose.Schema({
   _id:false,
@@ -18,4 +18,4 @@ const thisSchema = new mongoose.Schema({
   apiDescContent: String
 });
 
-export default mongoose.model("ApiPcDesc", thisSchema);
+module.exports = mongoose.model("ApiPcDesc", thisSchema);

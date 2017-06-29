@@ -1,6 +1,6 @@
-import express from 'express';
-import MockController from '../controller/mockController';
-import VisitLogLogic from '../logic/visitlogLogic';
+const express = require('express');
+const MockController = require('../controller/mockController');
+const VisitLogLogic = require('../logic/visitlogLogic');
 const router = express.Router();
 
 /*

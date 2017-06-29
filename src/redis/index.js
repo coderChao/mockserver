@@ -1,8 +1,8 @@
-import redis from 'redis';
-import bluebird from 'bluebird';
-import config from '../../config/redisconfig';
-import moment from 'moment';
-import SendMail from '../utils/mail';
+const redis = require('redis');
+const bluebird = require('bluebird');
+const config = require('../../config/redisconfig');
+const moment = require('moment');
+const SendMail = require('../utils/mail');
 
 //让redis的操作方法支持Promise式的回调
 bluebird.promisifyAll(redis.RedisClient.prototype);
@@ -21,7 +21,7 @@ const client = redis.createClient(config.port,config.host,{
             subject: 'Redis错误预警',
             html: `<h3>redis连接出错，请尽快处理</h3><br/><p>错误信息: ${options.error.message}</p>`
           });   
-          return 2000;  //如果重试五次后仍连接不上，发送报警邮件，并在之后每隔两秒重试一次  
+          return 60000;  //如果重试五次后仍连接不上，发送报警邮件，并在之后每隔一分钟重试一次  
         }
         // 1秒后重新连接
         return 1000;
@@ -67,7 +67,7 @@ client.safeGetStrAsync = async function(key){
     return null;
   }
   catch(e){
-    logger.error(`redis get 失败, key: ${key}错误信息: e.message`);
+    logger.error(`redis get 失败, key: ${key}错误信息: ${e.message}`);
     return null;
   }
 }
@@ -91,4 +91,4 @@ client.safeSetStrAsync = async function(key,value,expires = 86400) {
   }
 }
 
-export default client;
+module.exports = client;

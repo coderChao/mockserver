@@ -1,8 +1,8 @@
-import ApiLogic from '../logic/apiLogic';
-import ProjectLogic from '../logic/projectLogic';
-import mockJS from 'mockjs';
-import redis from '../redis';
-import request from '../utils/request';
+const ApiLogic = require('../logic/apiLogic');
+const ProjectLogic = require('../logic/projectLogic');
+const mockJS = require('mockjs');
+const redis = require('../redis');
+const request = require('../utils/request');
 
 class MockController{
   constructor(){
@@ -97,4 +97,4 @@ class MockController{
   }
 }
 
-export default new MockController()
+module.exports = new MockController()
