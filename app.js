@@ -15,7 +15,7 @@ moment.updateLocale('zh-CN',{
     'L': 'YYYY-MM-DD HH:mm:ss'
   } 
 }); //设置moment本地化
-global.logger  = require('./src/utils/log'); //设置全局log方法
+global.logger  = require('./dist/utils/log'); //设置全局log方法
 
 //mock系统自身业务路由
 var business = require('./dist/routes/businessRouter');
@@ -30,9 +30,14 @@ var app = express();
 // 统一设置返回请求头
 app.all('*', function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  //Accept:application/json
+  //Access-Control-Allow-Headers:Origin, X-Requested-With, Content-Type, Accept,JW_DATA,JW_TOKEN,JW_UID,JW_HOTEL_DT
+  //Access-Control-Allow-Methods:POST, GET, OPTIONS, DELETE
+  //Access-Control-Allow-Origin:*
+  //Access-Control-Max-Age:3600
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept,JW_DATA,JW_TOKEN,JW_UID,JW_HOTEL_DT");
   res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
-  res.header("X-Powered-By", 'NV 1.0.1')
+  res.header("X-Powered-By", '3.2.1')
   res.header("Content-Type", "application/json;charset=utf-8");
   next();
 });
