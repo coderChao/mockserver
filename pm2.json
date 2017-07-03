@@ -1,0 +1,16 @@
+{
+  "apps": [
+      {
+        "name": "mockserver",
+        "script": "./bin/www",
+        // "exec_interpreter": "babel-node",
+        "exec_mode" : "fork",
+        "watch": false,
+        "log_date_format":"YYYY-MM-DD HH:mm Z",
+        "env": {
+            "NODE_ENV": "production",
+            "PORT": 8888
+        }
+      }
+    ]
+}
