@@ -1,5 +1,5 @@
 const ApiLogic = require('../logic/apiLogic');
-const CreateReData = require('../utils/returnData');
+const CreateReData = require('../utils/returndata');
 const redis = require('redis');
 
 class ApiController {

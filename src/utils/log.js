@@ -1,11 +1,10 @@
 const log4js = require('log4js');
-const fs = require("fs");
 const path = require("path");
+const fsHelper = require('./fshelper');
 const logDirectory = path.join(__dirname, '../../log/app');
-//判断是否存在目录，如果不存在则创建
-if(!fs.existsSync(logDirectory)){
-  fs.mkdirSync(logDirectory);
-}
+//递归判断并创建目录
+fsHelper.mkdirsSync(logDirectory);
+
 log4js.configure({
     appenders: [
         {
