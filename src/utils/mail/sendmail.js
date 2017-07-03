@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
 
 let defaultMailOptions = {
     from: '765265609@qq.com', // sender address
-    to: 'zhangxiaochao163@163.com', // list of receivers   chao.zhang@jointwisdom.cn
+    to: 'chao.zhang@jointwisdom.cn', // list of receivers   chao.zhang@jointwisdom.cn
     subject: '测试邮件', // Subject line
     html: '<h3>这是一封测试邮件</h3'
     //html: '<b>Hello world ✔</b><br/><a href="https://www.baidu.com">点击</a>Embedded image: <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496326419686&di=4d94383f77cc66658282cfe1a6b91616&imgtype=0&src=http%3A%2F%2Fmvimg2.meitudata.com%2F5680b8019782e2655.jpg"/>', 
@@ -31,7 +31,6 @@ process.on('message', function(mailOptions){
     };
     // send mail with defined transport object
     transporter.sendMail(options, (error, info) => {
-        debugger;
         if (error) {
             process.send({error});
             return;

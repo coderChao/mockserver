@@ -13,7 +13,6 @@ const client = redis.createClient(config.port,config.host,{
     retry_strategy: function (options) {
         //纪录错误信息
         logger.error("redis连接出错" + JSON.stringify(options));
-        debugger;
         if (options.attempt > 5) {
           logger.error(`redis重连${options.attempt}次后失败，总重连时间: ${options.total_retry_time},错误信息：${options.error.message}`);
           //发送邮件
@@ -33,7 +32,6 @@ client.on("connect",() => {
   logger.info(`redis连接成功`);
 });
 // client.on("reconnecting", (data1,data2) => {
-//   debugger;
 //   console.log(data1);
 //   console.log(data2);
 // });
@@ -76,7 +74,6 @@ client.safeGetStrAsync = async function(key){
  * 安全set，expires单位为秒 默认为一天 24 * 60 * 60 ＝ 86400
  */
 client.safeSetStrAsync = async function(key,value,expires = 86400) {
-  debugger;
   try{
     if(client.connected){
       return await client.setAsync(key,value, 'EX', expires);

@@ -9,7 +9,6 @@ class MockController{
      this.ApiLogic = new ApiLogic();
   }
   HandleRequest = async (req,res,next) => {
-    debugger;
     try{
        let path = req.path.replace("/" + req.params.proCode,"");
        res.locals.path = path;
@@ -54,7 +53,6 @@ class MockController{
          isResponse: false,
          data: content
        }
-       debugger;
        next();
     }
     catch(e){    

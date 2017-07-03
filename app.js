@@ -87,7 +87,6 @@ app.use('/api',mockRouter);
 
 // 捕获错误
 app.use(function (err, req, res, next) {
-  debugger
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req
@@ -103,7 +102,6 @@ app.use(function (err, req, res, next) {
 
 // // catch 404 and forward to error handler
 // app.use(function (req, res, next) {
-//   debugger
 //   var err = new Error('Not Found');
 //   err.status = 404;
 //   next(err);

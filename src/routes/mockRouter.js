@@ -31,7 +31,6 @@ router.all("/:proCode/*",(req,res,next) =>{
    //添加日志
    try{     
      let log = res.locals.logObj;
-     debugger;
      log.visitResContent = JSON.stringify({
        headers: res._headers,
        body: res.locals.jsonObj.data
@@ -50,7 +49,6 @@ router.all("/:proCode/*",(req,res,next) =>{
 });
 //捕获错误，记录错误日志，返回错误信息
 router.use(function (err, req, res, next) {
-  debugger; 
   try{  
     let log = res.locals.logObj;
     log.visitErrorMsg = err.message;
