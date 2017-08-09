@@ -6,16 +6,14 @@ const moment = require('moment');
 
 const thisSchema = new mongoose.Schema({
       // 项目代码
-      proCode: {
-        type: String,
-      },
+      proCode: String,
       // 项目名称
-      proName: {
-        type: String
-      },
+      proName: String,
       // 项目默认代理地址
       proProxy: {
-        type: String
+        host: String,
+        port: String,
+        prefixUrl: String
       }
     });
 

@@ -1,6 +1,7 @@
 const ApiLogic = require('../logic/apiLogic');
 const ProjectLogic = require('../logic/projectLogic');
 const mockJS = require('mockjs');
+const _ = require('lodash');
 const redis = require('../redis');
 const request = require('../utils/request');
 
@@ -68,7 +69,7 @@ class MockController{
        let index = apiData.apiProxy.findIndex(item => item.proxyState === true);
        if(index !== -1){
          url = apiData.apiProxy[index].proxyUrl;
-       } 
+       }
     }
     if(url === ""){
        //从redis中获取项目配置的全局地址
@@ -80,17 +81,24 @@ class MockController{
           throw '项目不存在';
         }
         url = project.proProxy;
-        redis.safeSetStrAsync(req.params.proCode,project.proProxy);
-      }     
+        redis.safeSetStrAsync(req.params.proCode, JSON.stringify(project.proProxy));
+      }
+      else{
+        url = JSON.parse(url);
+      }   
+    } 
+    if(!url.host || !url.port){
+      throw "接口代理地址未配置,请配置正确的地址"
     }
-    let urlPort = url.split(':');
-    if(urlPort.length !== 2){
-      throw "接口地址未配置或配置不正确，正确配置例：127.0.0.1:3000 或 域名:3000"
+    let path = res.locals.path;
+    if(url.prefixUrl){
+      let prefix = _.trim(url.prefixUrl, "/");
+      path = `/${prefix}${path}`;
     }
     return await request(req,res,{
-      url: urlPort[0],
-      port: urlPort[1],
-      path: res.locals.path
+      url: url.host,
+      port: url.port,
+      path: path 
     });     
   }
 }
