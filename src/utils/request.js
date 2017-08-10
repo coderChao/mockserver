@@ -1,4 +1,5 @@
 var http = require('http');
+var _ = require('lodash');
 
 module.exports = function Request(req,res,params){ 
   req.headers["cache-control"] = "no-cache"; //禁用缓存
@@ -26,7 +27,7 @@ module.exports = function Request(req,res,params){
 				reject(err);
 			});
 		});
-		if (/POST|PUT/i.test(req.method)) {		
+		if(req.body && _.size(req.body) > 0) {		
 			sreq.write(JSON.stringify(req.body));
 		} 
 		req.pipe(sreq);

@@ -73,9 +73,9 @@ class MockController{
     }
     if(url === ""){
        //从redis中获取项目配置的全局地址
-      // let proRedisKey = `${req.params.proCode}-${req.ip}`;
-      // url = await redis.safeGetStrAsync(proRedisKey);
-      // if(!url){
+      let proRedisKey = `${req.params.proCode}-${req.ip}`;
+      url = await redis.safeGetStrAsync(proRedisKey);
+      if(!url){
         //从项目中获取配置的全局地址
         let project = await ProjectLogic.GetProjectByCode(req.params.proCode);
         if(!project){
@@ -85,11 +85,11 @@ class MockController{
         if(!url){
           throw '项目代理地址未配置或配置有误';
         }
-        // redis.safeSetStrAsync(proRedisKey, JSON.stringify(url));
-      // }
-      // else{
-      //   url = JSON.parse(url);
-      // }   
+        redis.safeSetStrAsync(proRedisKey, JSON.stringify(url));
+      }
+      else{
+        url = JSON.parse(url);
+      }   
     } 
     if(!url.host || !url.port){
       throw "项目代理地址未配置,请配置正确的地址";
