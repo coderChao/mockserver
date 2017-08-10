@@ -73,22 +73,26 @@ class MockController{
     }
     if(url === ""){
        //从redis中获取项目配置的全局地址
-      url = await redis.safeGetStrAsync(req.params.proCode);
+      let proRedisKey = `${req.params.proCode}-${req.ip}`;
+      url = await redis.safeGetStrAsync(proRedisKey);
       if(!url){
         //从项目中获取配置的全局地址
         let project = await ProjectLogic.GetProjectByCode(req.params.proCode);
         if(!project){
           throw '项目不存在';
+        }      
+        url = this._getProxyUrlInProject(req.ip,project.proProxy);
+        if(!url){
+          throw '项目代理地址未配置或配置有误';
         }
-        url = project.proProxy;
-        redis.safeSetStrAsync(req.params.proCode, JSON.stringify(project.proProxy));
+        redis.safeSetStrAsync(proRedisKey, JSON.stringify(url));
       }
       else{
         url = JSON.parse(url);
       }   
     } 
     if(!url.host || !url.port){
-      throw "接口代理地址未配置,请配置正确的地址"
+      throw "项目代理地址未配置,请配置正确的地址";
     }
     let path = res.locals.path;
     if(url.prefixUrl){
@@ -100,6 +104,23 @@ class MockController{
       port: url.port,
       path: path 
     });     
+  }
+  
+  /**
+   * 根据ip查找代理地址，先查找精确ip匹配的，未找到找*,都找不到返回null
+   * 
+   * @memberof MockController
+   */
+  _getProxyUrlInProject = (ip, address) => {
+    if(!address || !_.isArray(address) || address.length === 0){
+      return null;
+    }
+    let addr = _.find(address, item => item.originIp === ip); //先查找精确ip匹配的
+    if(addr){
+      return addr;
+    }
+    addr = _.find(address, item => item.originIp === "*"); //未找到找*,都找不到返回null
+    return addr;
   }
 }
 

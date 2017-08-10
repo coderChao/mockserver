@@ -8,13 +8,16 @@ const thisSchema = new mongoose.Schema({
       // 项目代码
       proCode: String,
       // 项目名称
-      proName: String,
+      proName: String,     
       // 项目默认代理地址
-      proProxy: {
-        host: String,
-        port: String,
-        prefixUrl: String
-      }
+      proProxy: [
+        {         
+          originIp: String,
+          host: String,
+          port: String,
+          prefixUrl: String
+        }
+      ]
     });
 
 module.exports = mongoose.model("Project", thisSchema);
