@@ -16,7 +16,7 @@ const logScheme = new mongoose.Schema({
    //非mock数据时，访问的真实服务地址
    visitRealServiceHost: String,
    //访问地址
-   visitAddr: String,
+   visitAddr: {type: String, index: true},
    //访问方式
    visitMethod: String,
    //请求内容
