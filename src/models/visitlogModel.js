@@ -13,6 +13,8 @@ const logScheme = new mongoose.Schema({
    visitIp: String,
    //是否使用的Mock数据
    isMockData: Boolean,
+   //非mock数据时，访问的真实服务地址
+   visitRealServiceHost: String,
    //访问地址
    visitAddr: String,
    //访问方式
