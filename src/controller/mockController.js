@@ -95,7 +95,7 @@ class MockController{
       throw "项目代理地址未配置,请配置正确的地址";
     }
     let path = res.locals.path;
-    let realHost = `${url.host}:${url.path}`;
+    let realHost = `${url.host}:${url.port}`;
     if(url.prefixUrl){
       let prefix = _.trim(url.prefixUrl, "/");
       path = `/${prefix}${path}`;
