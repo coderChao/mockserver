@@ -30,10 +30,6 @@ router.all("/:proCode/*",(req,res,next) =>{
 },MockController.HandleRequest,(req,res,next) => {
    //添加日志
    try{
-     if(req.method === "OPTIONS"){  //options请求不记录日志
-       res.locals.logObj = null;
-       return;
-     }
      let log = res.locals.logObj;
      log.visitResContent = JSON.stringify({
        headers: res._headers,

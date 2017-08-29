@@ -30,14 +30,14 @@ var app = express();
 // 统一设置返回请求头
 app.all('*', function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
-  //Accept:application/json
-  //Access-Control-Allow-Headers:Origin, X-Requested-With, Content-Type, Accept,JW_DATA,JW_TOKEN,JW_UID,JW_HOTEL_DT
-  //Access-Control-Allow-Methods:POST, GET, OPTIONS, DELETE
-  //Access-Control-Allow-Origin:*
-  //Access-Control-Max-Age:3600
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept,JW_DATA,JW_TOKEN,JW_UID,JW_HOTEL_DT");
-  res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
-  res.header("X-Powered-By", '3.2.1')
+  if(req.method === "OPTIONS"){
+    res.header("Access-Control-Allow-Headers", req.headers["access-control-request-headers"]);
+    res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
+    res.header("Access-Control-Max-Age", 3600); //预检请求缓存时间3600秒
+    res.sendStatus(204);
+    return;
+  }
+  res.header("X-Powered-By", '3.2.1');
   res.header("Content-Type", "application/json;charset=utf-8");
   next();
 });
