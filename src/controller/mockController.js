@@ -35,8 +35,15 @@ class MockController{
           else{
             mockData = JSON.parse(mockData);
           }  
-          if(mockData){           
-             let resData = mockJS.mock(JSON.parse(mockData.apiContentMock[0].mockData));
+          if(mockData){    
+             let filterMockData = this._getFilterDataByIp(req.ip, mockData.apiContentMock);
+             let resData;
+             try{
+               resData = mockJS.mock(JSON.parse(filterMockData.mockData));
+             }
+             catch(e){
+               throw new Error('mock数据格式配置错误');
+             }             
              res.locals.logObj.isMockData = true;
              res.locals.jsonObj = {
                isResponse: true,
@@ -79,11 +86,11 @@ class MockController{
         //从项目中获取配置的全局地址
         let project = await ProjectLogic.GetProjectByCode(req.params.proCode);
         if(!project){
-          throw '项目不存在';
+          throw new Error('项目不存在');
         }      
-        url = this._getProxyUrlInProject(req.ip,project.proProxy);
+        url = this._getFilterDataByIp(req.ip,project.proProxy);
         if(!url){
-          throw '项目代理地址未配置或配置有误';
+          throw new Error('项目代理地址未配置或配置有误');
         }
         redis.safeSetStrAsync(proRedisKey, JSON.stringify(url));
       }
@@ -92,7 +99,7 @@ class MockController{
       }   
     } 
     if(!url.host || !url.port){
-      throw "项目代理地址未配置,请配置正确的地址";
+      throw new Error("项目代理地址未配置,请配置正确的地址");
     }
     let path = res.locals.path;
     let realHost = `${url.host}:${url.port}`;
@@ -110,20 +117,20 @@ class MockController{
   }
   
   /**
-   * 根据ip查找代理地址，先查找精确ip匹配的，未找到找*,都找不到返回null
+   * 根据ip查找代理地址或mock数据，先查找精确ip匹配的，未找到找*,都找不到返回null
    * 
    * @memberof MockController
    */
-  _getProxyUrlInProject = (ip, address) => {
-    if(!address || !_.isArray(address) || address.length === 0){
+  _getFilterDataByIp = (ip, data) => {
+    if(!data || !_.isArray(data) || data.length === 0){
       return null;
     }
-    let addr = _.find(address, item => item.originIp === ip); //先查找精确ip匹配的
-    if(addr){
-      return addr;
+    let result = _.find(data, item => item.originIp === ip); //先查找精确ip匹配的
+    if(result){
+      return result;
     }
-    addr = _.find(address, item => item.originIp === "*"); //未找到找*,都找不到返回null
-    return addr;
+    result = _.find(data, item => item.originIp === "*"); //未找到找*,都找不到返回null
+    return result;
   }
 }
 

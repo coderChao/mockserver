@@ -56,13 +56,13 @@ router.use(function (err, req, res, next) {
     VisitLogLogic.CreateLog(log).then(data => {
       res.status(999);
       res.locals.logObj = null;
-      res.json({error: "mock系统出错,错误信息：" + err.message + ",请联系管理员"});
+      res.json({error: "出错了,错误信息：" + err.message + ""});
     });
   }
   catch(e){
     res.status(999);
     res.locals.logObj = null;
-    res.json({error: "mock系统出错,错误信息：" + e.message + ",请联系管理员"});
+    res.json({error: "出错了,错误信息：" + e.message + ""});
   }
 });
 module.exports = router;

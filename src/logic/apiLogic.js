@@ -153,19 +153,9 @@ module.exports = class ApiLogic {
    */
   GetApiMockListDataByapiId = async(ip,apiId) => {
     const _whereObj = {
-      id: apiId,
-      $or: [
-        {"apiContentMock.originIp": ip, "apiContentMock.mockState": true},
-        {"apiContentMock.originIp": "","apiContentMock.mockState": true}
-      ],
+      id: apiId,     
     };
-    return await apimockModel.find(_whereObj).sort({"apiContentMock.originIp": -1}).limit(1).then((mockData) => {      
-       let data = null;
-       if(mockData.length > 0){
-         data = mockData[0];
-       }
-       return data;
-    });
+    return await apimockModel.findOne(_whereObj);
   }
 
   /**
