@@ -13,7 +13,7 @@ require('moment/min/locales')
 moment.updateLocale('zh-CN',{
   longDateFormat: {
     'L': 'YYYY-MM-DD HH:mm:ss'
-  } 
+  }
 }); //设置moment本地化
 global.logger  = require('./dist/utils/log'); //设置全局log方法
 
@@ -72,16 +72,14 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 // 启用gzip压缩
 app.use(compression());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(cookieParser());
 // 设置静态目录
 app.use(express.static(path.join(__dirname, '/build')));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // 应用路由
-// app.use('/', index);
-// app.use('/users', users);
 app.use('/mockserver',business);
 app.use('/api',mockRouter);
 
